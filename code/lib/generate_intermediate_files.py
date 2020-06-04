@@ -673,15 +673,9 @@ def generate_processes(paths, param):
     pro_expansion = list(assumptions_pro.loc[assumptions_pro["cap-up"] != 0].index.unique())
     site_expansion = list(pd.read_csv(paths["sites_sub"], sep=";", decimal=",", index_col=0).index.unique())
     site_offshore = [site for site in site_expansion if site.endswith("_offshore")]
-    if len(site_offshore) and ("WindOff" in pro_expansion):
-        pro_expansion.remove("WindOff")
-        site_expansion = [site for site in site_expansion if site not in site_offshore]
-        ind_expansion_off = pd.MultiIndex.from_product([site_offshore, ["WindOff"]], names=["Site", "Type"])
-    else:
-        pro_expansion.remove("WindOff")
-        ind_expansion_off = pd.MultiIndex(levels=[[], []], codes=[[], []], names=["Site", "Type"])
+    
     df_expansion = (
-        pd.DataFrame(index=pd.MultiIndex.from_product([site_expansion, pro_expansion], names=["Site", "Type"]).append(ind_expansion_off))
+        pd.DataFrame(index=pd.MultiIndex.from_product([site_expansion, pro_expansion], names=["Site", "Type"]))
         .reset_index()
         .join(assumptions_pro, on=["Type"], how="left")
     )

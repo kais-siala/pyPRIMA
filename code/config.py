@@ -107,7 +107,7 @@ def scope_paths_and_parameters(paths, param):
     # Technologies
     param["technology"] = {
         "Storage": ["Battery", "PumSt"],
-        "Process": ["Bioenergy", "Coal", "Gas", "Geothermal", "Hydro", "Lignite", "Nuclear", "OilOther", "Solar", "WindOff", "WindOn"],
+        "Process": ["Bioenergy", "Coal", "Gas", "Geothermal", "Hydro", "Oil", "Solar", "WindOn", "Waste"],
     }
 
     return paths, param

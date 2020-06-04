@@ -607,48 +607,33 @@ def clean_processes_and_storage_Mekong(paths, param):
 
     # Read dictionary of technology names
     dict_technologies = pd.read_csv(paths["dict_technologies"], sep=";", decimal=",")
-    dict_technologies = dict_technologies[["FRESNA", "Model names"]].set_index(["FRESNA"])
+    dict_technologies = dict_technologies[["Mekong", "Model names"]].set_index(["Mekong"])
     dict_technologies = dict_technologies.loc[dict_technologies.index.dropna()]
     dict_technologies = dict_technologies["Model names"].to_dict()
 
-    # Get data from FRESNA database
-    Process = pd.read_csv(paths["FRESNA"], header=0, skipinitialspace=True, usecols=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
-    Process.rename(columns={"Capacity": "inst-cap", "lat": "Latitude", "lon": "Longitude"}, inplace=True)
+    # Get data from the Mekong database
+    Process = pd.read_csv(paths["PP_Mekong"], header=0, sep=";", decimal=",", usecols=[1,4,5,6,8,9,12])
+    Process.rename(columns={"COUNTRY": "Country", "UNIT": "Name", "MW": "inst-cap", "LAT": "Latitude", "LONG": "Longitude", "FUEL": "Technology", "YEAR": "YearCommissioned"}, inplace=True)
 
     # Obtain preliminary information before cleaning
     Process["Technology"].fillna("NaN", inplace=True)
     Process["inst-cap"].fillna(0, inplace=True)
-    Process[["Fueltype", "Technology", "Set", "inst-cap"]].groupby(["Fueltype", "Technology", "Set"]).sum().to_csv(
+    Process[["Country", "Technology", "inst-cap"]].groupby(["Country", "Technology"]).sum().to_csv(
         paths["process_raw"], sep=";", decimal=",", index=True
     )
-    create_json(paths["process_raw"], param, [], paths, ["FRESNA"])
-    print("Number of power plants in FRESNA: ", len(Process), "- installed capacity: ", Process["inst-cap"].sum())
+    create_json(paths["process_raw"], param, [], paths, ["PP_Mekong"])
+    print("Number of power plants in Mekong DB: ", len(Process), "- installed capacity: ", Process["inst-cap"].sum())
 
     # TYPE
     # Define type of process/storage
-    Process["Type"] = "(" + Process["Fueltype"] + "," + Process["Technology"] + "," + Process["Set"] + ")"
+    Process["Type"] = Process["Technology"]
     for key in dict_technologies.keys():
         Process.loc[Process["Type"] == key, "Type"] = dict_technologies[key]
     # Remove useless rows (Type not needed)
     Process.dropna(subset=["Type"], inplace=True)
     Process.to_csv(paths["process_filtered"], sep=";", decimal=",", index=False)
-    create_json(paths["process_filtered"], param, [], paths, ["FRESNA", "dict_technologies"])
-    print("Number of power plants after filtering FRESNA: ", len(Process), "- installed capacity: ", Process["inst-cap"].sum())
-
-    # INCLUDE RENEWABLE POWER PLANTS (IRENA)
-    for pp in paths["locations_ren"].keys():
-        # Shapefile with power plants
-        pp_shapefile = gpd.read_file(paths["locations_ren"][pp])
-        pp_df = pd.DataFrame(pp_shapefile.rename(columns={"Capacity": "inst-cap"}))
-        pp_df["Longitude"] = [pp_df.loc[i, "geometry"].x for i in pp_df.index]
-        pp_df["Latitude"] = [pp_df.loc[i, "geometry"].y for i in pp_df.index]
-        pp_df["Type"] = pp
-        pp_df["Name"] = [pp + "_" + str(i) for i in pp_df.index]
-        pp_df.drop(["geometry"], axis=1, inplace=True)
-        Process = Process.append(pp_df, ignore_index=True, sort=True)
-    Process.to_csv(paths["process_joined"], sep=";", decimal=",", index=False)
-    create_json(paths["process_joined"], param, [], paths, ["FRESNA", "process_filtered", "dict_technologies", "locations_ren"])
-    print("Number of power plants after adding distributed renewable capacity: ", len(Process), "- installed capacity: ", Process["inst-cap"].sum())
+    create_json(paths["process_filtered"], param, [], paths, ["PP_Mekong", "dict_technologies"])
+    print("Number of power plants after filtering Mekong DB: ", len(Process), "- installed capacity: ", Process["inst-cap"].sum())
 
     # NAME
     Process["Name"].fillna("unnamed", inplace=True)
@@ -658,7 +643,7 @@ def clean_processes_and_storage_Mekong(paths, param):
     Process["Name"] = [Process.loc[i, "Name"].replace(" ", "_") for i in Process.index]
 
     # YEAR
-    Process["Year"] = [max(Process.loc[i, "YearCommissioned"], Process.loc[i, "Retrofit"]) for i in Process.index]
+    Process["Year"] = Process["YearCommissioned"]
     # Assign a dummy year for entries with missing information
     year_mu = dict(zip(assumptions_pro["Process"], assumptions_pro["year_mu"].astype(float)))
     year_mu.update(dict(zip(assumptions_sto["Storage"], assumptions_sto["year_mu"].astype(float))))
@@ -718,7 +703,7 @@ def clean_processes_and_storage_Mekong(paths, param):
         param,
         ["year", "process"],
         paths,
-        ["FRESNA", "process_joined", "dict_technologies", "locations_ren", "assumptions_processes", "assumptions_storage"],
+        ["PP_Mekong", "process_joined", "dict_technologies", "locations_ren", "assumptions_processes", "assumptions_storage"],
     )
 
     # GEOMETRY
@@ -739,7 +724,7 @@ def clean_processes_and_storage_Mekong(paths, param):
         param,
         ["year", "process"],
         paths,
-        ["FRESNA", "process_completed", "dict_technologies", "locations_ren", "assumptions_processes", "assumptions_storage"],
+        ["PP_Mekong", "process_completed", "dict_technologies", "locations_ren", "assumptions_processes", "assumptions_storage"],
     )
 
     timecheck("End")
