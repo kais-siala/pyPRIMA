@@ -36,7 +36,6 @@ def generate_urbs_model(paths, param):
     if os.path.exists(paths["process_regions"]):
         proc = pd.read_csv(paths["process_regions"], sep=";", decimal=",")
         proc.rename(columns={"Type": "Process",
-                             "min-fraction": "min-frac",
                              "start-cost": "startup-cost"}, inplace=True)
         proc = proc[["Site", "Process", "inst-cap", "cap-lo", "cap-up", "max-grad", "min-frac", "inv-cost", "fix-cost", "var-cost",
                      "startup-cost", "wacc", "depreciation", "area-per-cap"]]
