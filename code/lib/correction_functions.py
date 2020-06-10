@@ -318,6 +318,214 @@ def clean_load_data_ENTSOE(paths, param):
     create_json(paths["load_ts_clean"], param, ["region_name", "year"], paths, ["dict_countries", "load_ts"])
 
     timecheck("End")
+    
+
+def clean_load_data_Mekong(paths, param):
+    """
+    This function reads the raw load time series from the Mekong Database, renames the substations based on their locations, and
+    groups them according to the administrative divisions.
+    
+    :param paths: Dictionary containing the paths to the ENTSO-E input, to the dictionary of country names, and to the output.
+    :type paths: dict
+    :param param: Dictionary containing information about the year of the data.
+    :type param: dict
+    
+    :return: The result is saved directly in a CSV file in the desired path, along with its corresponding metadata.
+    :rtype: None
+    """
+    timecheck("Start")
+
+    # Read country load timeseries
+    df_raw_laos = pd.read_csv(paths["load_ts_laos"], header=0)
+    df_raw_thailand = pd.read_csv(paths["load_ts_thailand"], header=0)
+    df_raw_cambodia = pd.read_csv(paths["load_ts_cambodia"], header=0)
+
+    # Remove useless columns
+    df_raw_laos.drop(columns=["Unnamed: 0", "Year", "Month", "Day", "Hour"], inplace=True)
+    df_raw_thailand.drop(columns=["Year", "Month", "Day", "Hour"], inplace=True)
+    df_raw_cambodia.drop(columns=["Year", "Month", "Day", "Hour"], inplace=True)
+    
+    # Transpose and append
+    df_raw = df_raw_laos.T.append(df_raw_thailand.T)
+    df_raw = df_raw.append(df_raw_cambodia.T)
+
+    # Read map of substations
+    gdf_regions = gpd.read_file(paths["subregions"])
+    gdf_sub_laos = gpd.read_file(paths["substations_laos"]).to_crs(gdf_regions.crs)
+    gdf_sub_thailand = gpd.read_file(paths["substations_thailand"]).to_crs(gdf_regions.crs)
+    gdf_sub_cambodia = gpd.read_file(paths["substations_cambodia"]).to_crs(gdf_regions.crs)
+    gdf_sub = gdf_sub_laos.append(gdf_sub_thailand)
+    gdf_sub = gdf_sub.append(gdf_sub_cambodia)
+    
+    # Spatial join to match substations with regions
+    dict_sub = gpd.sjoin(gdf_sub, gdf_regions, how="left", op="intersects")[["substation", "NAME_SHORT"]].reset_index()
+    dict_sub.loc[dict_sub["substation"]=="NakadokMinning", "NAME_SHORT"] = "LAO03"
+    
+    for ind in dict_sub.index:
+        try:
+            dict_sub.loc[ind, "substation"] = dict_sub.loc[ind, "substation"].replace(" ", "")
+            dict_sub.loc[ind, "substation"] = dict_sub.loc[ind, "substation"].replace("-", "")
+        except:
+            dict_sub.loc[ind, "substation"] = "KPT"
+    dict_sub = dict_sub.drop_duplicates(["substation"])
+            
+
+    # Join
+    df_joined = df_raw.reset_index().groupby("index").sum().join(dict_sub.set_index("substation")[["NAME_SHORT"]], how="left")
+    df_joined.loc["BMC", "NAME_SHORT"] = "KHM01"
+    df_joined.loc["Banteay_Meanchay", "NAME_SHORT"] = "KHM01"
+    df_joined.loc["BanBueng", "NAME_SHORT"] = "THA12"
+    df_joined.loc["Chacheongsao", "NAME_SHORT"] = "THA06"
+    df_joined.loc["Chiangrai", "NAME_SHORT"] = "THA11"
+    df_joined.loc["ChomThien", "NAME_SHORT"] = "THA12"
+    df_joined.loc["ChonBuri", "NAME_SHORT"] = "THA12"
+    df_joined.loc["GS1", "NAME_SHORT"] = "KHM16"
+    df_joined.loc["GS2", "NAME_SHORT"] = "KHM16"
+    df_joined.loc["GS3", "NAME_SHORT"] = "KHM16"
+    df_joined.loc["HuaWat", "NAME_SHORT"] = "THA30"
+    df_joined.loc["KPCM", "NAME_SHORT"] = "KHM03"
+    df_joined.loc["KPS", "NAME_SHORT"] = "KHM05"
+    df_joined.loc["KhlongNgae", "NAME_SHORT"] = "THA64"
+    df_joined.loc["LatPhrao", "NAME_SHORT"] = "THA03"
+    df_joined.loc["Nan1", "NAME_SHORT"] = "THA32"
+    df_joined.loc["Phayao", "NAME_SHORT"] = "THA41"
+    df_joined.loc["Phetchabun", "NAME_SHORT"] = "THA42"
+    df_joined.loc["Phuket2", "NAME_SHORT"] = "THA48"
+    df_joined.loc["Phuket3", "NAME_SHORT"] = "THA48"
+    df_joined.loc["Ranot", "NAME_SHORT"] = "THA64"
+    df_joined.loc["Ratchaburi", "NAME_SHORT"] = "THA58"
+    df_joined.loc["Rayong1", "NAME_SHORT"] = "THA53"
+    df_joined.loc["SHV", "NAME_SHORT"] = "KHM13"
+    df_joined.loc["SRP", "NAME_SHORT"] = "KHM21"
+    df_joined.loc["STR", "NAME_SHORT"] = "KHM22"
+    df_joined.loc["Sadao", "NAME_SHORT"] = "THA64"
+    df_joined.loc["SamPhran2", "NAME_SHORT"] = "THA27"
+    df_joined.loc["Sattahip2", "NAME_SHORT"] = "THA12"
+    df_joined.loc["SouthBangkok", "NAME_SHORT"] = "THA57"
+    df_joined.loc["SouthBangkokCC", "NAME_SHORT"] = "THA57"
+    df_joined.loc["SuphanBuri", "NAME_SHORT"] = "THA66"
+    df_joined.loc["TKO", "NAME_SHORT"] = "KHM24"
+    df_joined.loc["Tak1", "NAME_SHORT"] = "THA69"
+    df_joined.loc["Theparak", "NAME_SHORT"] = "THA57"
+    
+    # Solve issues with missing values
+    for ind in df_joined.loc[df_joined["NAME_SHORT"].isna()].index:
+        if (ind.startswith("Camb")) or (ind.startswith("EGAT")):
+            df_joined.drop(index=ind, inplace=True)
+        elif ind.startswith("Viet"):
+            df_joined.loc[ind, "NAME_SHORT"] = "Vietnam"
+        elif ind.endswith("Malaysia"):
+            df_joined.loc[ind, "NAME_SHORT"] = "Malaysia"
+        else:
+            import pdb; pdb.set_trace()
+            df_joined.loc[ind, "NAME_SHORT"] = "Unknown"
+            
+    # Group
+    df_grouped = df_joined.reset_index().drop(columns="index")
+    df_grouped = df_grouped.groupby(["NAME_SHORT"]).sum().T
+    
+    df_grouped.to_csv(paths["load_regions"], index=True, sep=";", decimal=",")
+    print("File saved: " + paths["load_regions"])
+    create_json(paths["load_regions"], param, ["region_name", "year"], paths, ["substations_laos", "substations_thailand", "substations_cambodia", "subregions", "load_ts_laos", "load_ts_thailand", "load_ts_cambodia"])
+
+    timecheck("End")
+    
+    
+def clean_hydro_data_Mekong(paths, param):
+    """
+    This function reads the raw hydro time series from the Mekong Database, renames the hydro power plants based on their locations, and
+    groups them according to the administrative divisions.
+    
+    :param paths: Dictionary containing the paths to the ENTSO-E input, to the dictionary of country names, and to the output.
+    :type paths: dict
+    :param param: Dictionary containing information about the year of the data.
+    :type param: dict
+    
+    :return: The result is saved directly in a CSV file in the desired path, along with its corresponding metadata.
+    :rtype: None
+    """
+    timecheck("Start")
+
+    # Read country load timeseries
+    df_raw_laos = pd.read_csv(paths["hydro_ts_laos"], header=0)
+    df_raw_thailand = pd.read_csv(paths["hydro_ts_thailand"], header=0)
+    df_raw_cambodia = pd.read_csv(paths["hydro_ts_cambodia"], header=0)
+
+    # Remove useless columns
+    df_raw_laos.drop(columns=["Year", "Month", "Day", "Hour"], inplace=True)
+    df_raw_thailand.drop(columns=["Year", "Month", "Day", "Hour"], inplace=True)
+    df_raw_cambodia.drop(columns=["Year", "Month", "Day", "Hour"], inplace=True)
+    
+    # Transpose and append
+    df_raw = df_raw_laos.T.append(df_raw_thailand.T)
+    df_raw = df_raw.append(df_raw_cambodia.T)
+
+    # Read map of power plants
+    gdf_regions = gpd.read_file(paths["subregions"])
+    gdf_pp_laos = gpd.read_file(paths["hydro_pp_laos"]).to_crs(gdf_regions.crs)
+    gdf_pp_thailand = gpd.read_file(paths["hydro_pp_thailand"]).to_crs(gdf_regions.crs)
+    gdf_pp_cambodia = gpd.read_file(paths["hydro_pp_cambodia"]).to_crs(gdf_regions.crs)
+    gdf_pp = gdf_pp_laos.append(gdf_pp_thailand)
+    gdf_pp = gdf_pp.append(gdf_pp_cambodia)
+    
+    # Spatial join to match substations with regions
+    dict_pp = gpd.sjoin(gdf_pp, gdf_regions, how="left", op="intersects")[["plant", "NAME_SHORT", "MW"]].reset_index()
+    dict_pp.loc[dict_pp["plant"]=="Atay", "plant"] = "ATYh"
+    dict_pp.loc[dict_pp["plant"]=="Kirirom 1", "plant"] =  "KIR1h"
+    dict_pp.loc[dict_pp["plant"]=="Kirirom 3", "plant"] =  "KIR3h"
+    dict_pp.loc[dict_pp["plant"]=="Kamchay", "plant"] =  "KMCh"
+    dict_pp.loc[dict_pp["plant"]=="Lower Russei Chrum", "plant"] =  "LRCh"
+    dict_pp.loc[dict_pp["plant"]=="Upper Russei Chrum", "plant"] =  "LRCh"
+    dict_pp.loc[dict_pp["plant"]=="Tatay", "plant"] = "TTYh"
+    dict_pp.loc[dict_pp["plant"]=="ThaThungNa", "plant"] = "ThungNa"
+    
+    for ind in dict_pp.index:
+        dict_pp.loc[ind, "plant"] = dict_pp.loc[ind, "plant"].replace(" ", "")
+        
+    dict_pp = dict_pp.drop_duplicates(["plant"])
+            
+    # Join
+    df_joined = df_raw.reset_index().groupby("index").sum().join(dict_pp.set_index("plant")[["NAME_SHORT", "MW"]], how="left")
+    
+    # Solve issues with missing values
+    for ind in df_joined.loc[df_joined["NAME_SHORT"].isna()].index:
+        if ind.endswith("Dam"):
+            df_joined.loc[ind, "NAME_SHORT"] = dict_pp.set_index("plant").loc[ind[:-3], "NAME_SHORT"]
+            df_joined.loc[ind, "MW"] = dict_pp.set_index("plant").loc[ind[:-3], "MW"]
+        else:
+            import pdb; pdb.set_trace()
+            df_joined.loc[ind, "NAME_SHORT"] = "Unknown"
+    
+    # Correct installed capacity
+    df_joined["max"] = df_joined.iloc[:,:-2].max(axis=1)
+    df_joined["inst-cap"] = df_joined[["max", "MW"]].max(axis=1)
+    
+    # Group
+    df_grouped = df_joined.reset_index().drop(columns="index")
+    df_grouped = df_grouped.groupby(["NAME_SHORT"]).sum().T
+    
+    # Export time series
+    hydro_ts = (df_grouped.iloc[:8760] / df_grouped.loc["inst-cap"]).round(5)
+    hydro_ts.to_csv(paths["hydro_regions"], index=True, sep=";", decimal=",")
+    print("File saved: " + paths["hydro_regions"])
+    create_json(paths["hydro_regions"], param, ["region_name", "year"], paths, ["hydro_pp_laos", "hydro_pp_thailand", "hydro_pp_cambodia", "subregions", "hydro_ts_laos", "hydro_ts_thailand", "hydro_ts_cambodia"])
+
+    # Append power plants
+    hydro_pp = pd.DataFrame(df_grouped.loc["inst-cap"])
+    hydro_pp["Type"] = "Hydro"
+    hydro_pp["Name"] = "Hydro_" + hydro_pp.index
+    hydro_pp["Year"] = param["year"]
+    regions_shp = param["regions_sub"]
+    hydro_pp = hydro_pp.join(regions_shp.set_index("NAME_SHORT")[["geometry"]], how="left")
+    hydro_pp = gpd.GeoDataFrame(hydro_pp, geometry="geometry", crs=regions_shp.crs)
+    hydro_pp["geometry"] = hydro_pp["geometry"].centroid
+    hydro_pp.reset_index(inplace=True)
+    hydro_pp.drop("NAME_SHORT", axis=1, inplace=True)
+    process_shp = gpd.read_file(paths["process_cleaned"])
+    process_shp = process_shp.append(hydro_pp, ignore_index=True)
+    process_shp = gpd.GeoDataFrame(process_shp, geometry="geometry", crs=regions_shp.crs)
+    process_shp.to_file(driver="ESRI Shapefile", filename=paths["process_cleaned"])
+    timecheck("End")
 
 
 def clean_sector_shares_Eurostat(paths, param):
@@ -612,7 +820,7 @@ def clean_processes_and_storage_Mekong(paths, param):
     dict_technologies = dict_technologies["Model names"].to_dict()
 
     # Get data from the Mekong database
-    Process = pd.read_csv(paths["PP_Mekong"], header=0, sep=";", decimal=",", usecols=[1,4,5,6,8,9,12])
+    Process = pd.read_csv(paths["PP_Mekong"], header=0, sep=";", decimal=",", usecols=[1,4,5,6,8,9,11,12])
     Process.rename(columns={"COUNTRY": "Country", "UNIT": "Name", "MW": "inst-cap", "LAT": "Latitude", "LONG": "Longitude", "FUEL": "Technology", "YEAR": "YearCommissioned"}, inplace=True)
 
     # Obtain preliminary information before cleaning
@@ -623,12 +831,15 @@ def clean_processes_and_storage_Mekong(paths, param):
     )
     create_json(paths["process_raw"], param, [], paths, ["PP_Mekong"])
     print("Number of power plants in Mekong DB: ", len(Process), "- installed capacity: ", Process["inst-cap"].sum())
-
+    
     # TYPE
     # Define type of process/storage
     Process["Type"] = Process["Technology"]
     for key in dict_technologies.keys():
         Process.loc[Process["Type"] == key, "Type"] = dict_technologies[key]
+    Process.loc[Process["Type"]== "Gas", "Type"] = Process.loc[Process["Type"]== "Gas"].apply(lambda x: x["Type"] + "_" + x["TURBINE/TECH"][:2], axis=1)
+    Process.loc[Process["Type"]== "Oil", "Type"] = Process.loc[Process["Type"]== "Oil"].apply(lambda x: x["Type"] + "_" + x["TURBINE/TECH"][:2], axis=1)
+    
     # Remove useless rows (Type not needed)
     Process.dropna(subset=["Type"], inplace=True)
     Process.to_csv(paths["process_filtered"], sep=";", decimal=",", index=False)
@@ -654,6 +865,7 @@ def clean_processes_and_storage_Mekong(paths, param):
         Process.loc[(Process["Type"] == p) & filter, "year_mu"] = year_mu[p]
         Process.loc[(Process["Type"] == p) & filter, "year_stdev"] = year_stdev[p]
     Process.loc[filter, "Year"] = np.floor(np.random.normal(Process.loc[filter, "year_mu"], Process.loc[filter, "year_stdev"]))
+    Process.loc[Process["Year"]>param["year"], "Year"] = param["year"]
 
     # COORDINATES
     P_missing = Process[Process["Longitude"].isnull()].copy()
@@ -874,7 +1086,6 @@ def clean_grid_Mekong(paths, param):
     # Read CSV file containing the lines data
     grid_raw = gpd.read_file(paths["transmission_lines"])
 
-    import pdb; pdb.set_trace()
     # Fill susceptance
     grid_corrected = grid_raw.copy()
     grid_corrected.loc[grid_corrected["linesus"]==0, "linesus"] = np.nan
@@ -882,66 +1093,24 @@ def clean_grid_Mekong(paths, param):
     
     # Calculating the length of each line
     grid_corrected = grid_corrected.to_crs("epsg:32662")
-    grid_corrected["Length2"] = grid_corrected["geometry"].length / 10 ** 3
+    grid_corrected["Length"] = grid_corrected["geometry"].length / 10 ** 3
     grid_corrected = grid_corrected.to_crs(epsg=4326)
             
     # Calculate susceptance
-    grid_corrected["Y_mho_ref_380kV"] = grid_corrected["linesus"] * grid_corrected["Length2"] * ((230000 / grid_corrected["kV"]) ** 2)
+    grid_corrected["Y_mho_ref_380kV"] = grid_corrected["linesus"] * grid_corrected["Length"] * ((230000 / grid_corrected["kV"]) ** 2)
     
     # Prepare dataframe
-    grid_corrected["Cap_MVA"] = grid_corrected["linemva"]
+    grid_corrected["Capacity_MVA"] = grid_corrected["linemva"]
     grid_corrected["tr_type"] = "AC_OHL"
     grid_corrected["l_id"] = grid_corrected.index
-
-    # Expand columns with multiple values
-    grid_expanded = grid_raw.copy()
-    grid_expanded = expand_dataframe(grid_expanded, ["voltage", "wires", "cables", "frequency"])
-    grid_expanded.to_csv(paths["grid_expanded"], index=False, sep=";", decimal=",")
-    create_json(paths["grid_expanded"], param, [], paths, ["transmission_lines"])
-
-    # If data is trustworthy, remove NaN values
-    grid_filtered = grid_expanded.copy()
-    for col in ["voltage", "wires", "cables", "frequency"]:
-        if param["grid"]["quality"][col] == 1:
-            grid_filtered = grid_filtered[~grid_filtered[col].isnull()]
-    grid_filtered.to_csv(paths["grid_filtered"], index=False, sep=";", decimal=",")
-    create_json(paths["grid_filtered"], param, ["grid"], paths, ["transmission_lines", "grid_expanded"])
-
-    # Fill missing data with most common value
-    grid_corrected = grid_filtered.copy()
-    for col in ["voltage", "wires", "cables", "frequency"]:
-        grid_corrected.loc[grid_corrected[col].isnull(), col] = grid_corrected[col].value_counts().index[0]
-
-
-    # Eventually overwrite the values in 'wires' using 'cables'
-    if param["grid"]["quality"]["cables"] > param["grid"]["quality"]["wires"]:
-        grid_corrected.loc[:, "wires"] = np.minimum(grid_corrected.loc[:, "cables"] // 3, 1)
-
-    # Make sure no wires are equal to 0
-    grid_corrected.replace({"wires": 0}, 1, inplace=True)
-
-    # Save corrected grid
-    grid_corrected.to_csv(paths["grid_corrected"], index=False, sep=";", decimal=",")
-    create_json(paths["grid_corrected"], param, ["grid"], paths, ["transmission_lines", "grid_expanded", "grid_filtered"])
-
-    # Complete missing information
-    grid_filled = grid_corrected.copy()
-    grid_filled["length_m"] = grid_filled["length_m"].astype(float)
-    grid_filled["x_ohmkm"] = assign_values_based_on_series(
-        grid_filled["voltage"] / 1000, dict_line_voltage["specific_impedance_Ohm_per_km"].dropna().to_dict()
-    )
-    grid_filled["X_ohm"] = grid_filled["x_ohmkm"] * grid_filled["length_m"] / 1000 / grid_filled["wires"]
-    grid_filled["loadability"] = assign_values_based_on_series(grid_filled["length_m"] / 1000, dict_line_voltage["loadability"].dropna().to_dict())
-    grid_filled["SIL_MW"] = assign_values_based_on_series(grid_filled["voltage"] / 1000, dict_line_voltage["SIL_MWh"].dropna().to_dict())
-    grid_filled["Capacity_MVA"] = grid_filled["SIL_MW"] * grid_filled["loadability"] * grid_filled["wires"]
-    grid_filled["Y_mho_ref_380kV"] = 1 / (grid_filled["X_ohm"] * ((380000 / grid_filled["voltage"]) ** 2))
-    grid_filled.loc[grid_filled["frequency"] == 0, "tr_type"] = "DC_CAB"
-    grid_filled.loc[~(grid_filled["frequency"] == 0), "tr_type"] = "AC_OHL"
-    grid_filled.to_csv(paths["grid_filled"], index=False, sep=";", decimal=",")
+    grid_corrected["V1_long"] = grid_corrected.apply(lambda x: x['geometry'].coords[0][0], axis=1)
+    grid_corrected["V1_lat"] = grid_corrected.apply(lambda x: x['geometry'].coords[0][1], axis=1)
+    grid_corrected["V2_long"] = grid_corrected.apply(lambda x: x['geometry'].coords[1][0], axis=1)
+    grid_corrected["V2_lat"] = grid_corrected.apply(lambda x: x['geometry'].coords[1][1], axis=1)
 
     # Group lines with same IDs
     grid_grouped = (
-        grid_filled[["l_id", "tr_type", "Capacity_MVA", "Y_mho_ref_380kV", "V1_long", "V1_lat", "V2_long", "V2_lat"]]
+        grid_corrected[["l_id", "tr_type", "Capacity_MVA", "Y_mho_ref_380kV", "V1_long", "V1_lat", "V2_long", "V2_lat"]]
         .groupby(["l_id", "tr_type", "V1_long", "V1_lat", "V2_long", "V2_lat"])
         .sum()
     )
@@ -949,7 +1118,7 @@ def clean_grid_Mekong(paths, param):
     grid_grouped.loc[:, ["V1_long", "V1_lat", "V2_long", "V2_lat"]] = grid_grouped.loc[:, ["V1_long", "V1_lat", "V2_long", "V2_lat"]].astype(float)
     grid_grouped.to_csv(paths["grid_cleaned"], index=False, sep=";", decimal=",")
     create_json(
-        paths["grid_cleaned"], param, ["grid"], paths, ["dict_line_voltage", "transmission_lines", "grid_expanded", "grid_filtered", "grid_corrected"]
+        paths["grid_cleaned"], param, ["grid"], paths, ["dict_line_voltage", "transmission_lines", "grid_corrected"]
     )
     print("File saved: " + paths["grid_cleaned"])
 
@@ -968,7 +1137,7 @@ def clean_grid_Mekong(paths, param):
             status += 1
             display_progress("Writing grid to shapefile: ", (count, status))
     create_json(
-        paths["grid_shp"], param, ["grid"], paths, ["dict_line_voltage", "transmission_lines", "grid_expanded", "grid_filtered", "grid_corrected"]
+        paths["grid_shp"], param, ["grid"], paths, ["dict_line_voltage", "transmission_lines", "grid_corrected"]
     )
     print("File saved: " + paths["grid_shp"])
     timecheck("End")

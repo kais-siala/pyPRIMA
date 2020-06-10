@@ -107,7 +107,7 @@ def scope_paths_and_parameters(paths, param):
     # Technologies
     param["technology"] = {
         "Storage": ["Battery", "PumSt"],
-        "Process": ["Bioenergy", "Coal", "Gas", "Geothermal", "Hydro", "Oil", "Solar", "WindOn", "Waste"],
+        "Process": ["Bioenergy", "Coal", "Gas_CC", "Gas_GT", "Gas_IC", "Gas_ST", "Geothermal", "Hydro", "Oil_GT", "Oil_IC", "Oil_ST", "Solar", "WindOn", "Waste"],
     }
 
     return paths, param
@@ -210,7 +210,7 @@ def processes_parameters(param):
     :rtype: dict
     """
 
-    param["process"] = {"cohorts": 1}  # 5 means 5-year steps, if no cohorts needed type 1
+    param["process"] = {"cohorts": 10000}  # 5 means 5-year steps, if no cohorts needed type 1
     
     param["dist_ren"] = {
         "units": {"Solar": 5, "WindOn": 10, "WindOff": 20, "Bioenergy": 10, "Hydro": 50},
@@ -459,10 +459,14 @@ def load_input_paths(paths, param):
     region = param["region_name"]
 
     # Raw Inputs
-    PathTemp = root + "01 Raw inputs" + fs + "Load" + fs
-    paths["sector_shares"] = PathTemp + "Eurostat" + fs + "nrg_105a_1_Data.csv"
-    paths[
-        "load_ts"] = PathTemp + "ENTSOE" + fs + "Monthly-hourly-load-values_2006-2015.xlsx"  # CA: "CA_Load Profiles_11 Regions_correct names.csv"
+    PathTemp = root + "01 Raw inputs" + fs + "to sort" + fs
+    paths["load_ts_laos"] = PathTemp + "DataR_Laos" + fs + "data_laos_load_export_2016.csv"
+    paths["load_ts_thailand"] = PathTemp + "DataR_Thailand" + fs + "data_thai_load_hourly_2016.csv"
+    paths["load_ts_cambodia"] = PathTemp + "DataR_Cambodia" + fs + "data_camb_load_2016.csv"
+    paths["substations_laos"] = PathTemp + "Powergrid_GIS_Data" + fs + "laos_grid" + fs + "LaoDemand.shp"
+    paths["substations_thailand"] = PathTemp + "Powergrid_GIS_Data" + fs + "thai_grid" + fs + "ThaiSubstationsPrj.shp"
+    paths["substations_cambodia"] = PathTemp + "Powergrid_GIS_Data" + fs + "cambodia_grid" + fs + "CambodiaSubstationsPrj.shp"
+    
     paths["profiles"] = {
         "RES": PathTemp + "Load profiles" + fs + "Lastprofil_Haushalt_H0.xlsx",
         # CA: "Residential Load Profile_2017_SCE.csv"
@@ -501,6 +505,16 @@ def renewable_time_series_paths(paths, param):
     PathTemp = paths[
                    "region"] + "Renewable energy" + fs + "Regional analysis" + fs + subregions + fs + "Regression outputs" + fs
 
+    # Raw Inputs
+    PathTemp = root + "01 Raw inputs" + fs + "to sort" + fs + "Hydropower_data" + fs
+    paths["hydro_ts_laos"] = PathTemp + "data_laos_hydro_hourly_2016.csv"
+    paths["hydro_ts_thailand"] = PathTemp + "data_thai_hydro_hourly_2016.csv"
+    paths["hydro_ts_cambodia"] = PathTemp + "data_camb_hydro_hourly_2016.csv"
+    PathTemp = root + "01 Raw inputs" + fs + "to sort" + fs + "Powergrid_GIS_Data" + fs
+    paths["hydro_pp_laos"] = PathTemp + "laos_grid" + fs + "LaoHydroPrj.shp"
+    paths["hydro_pp_thailand"] = PathTemp + "thai_grid" + fs + "ThaiHydroPrj.shp"
+    paths["hydro_pp_cambodia"] = PathTemp + "cambodia_grid" + fs + "CamboHydroPrj.shp"
+    
     paths["TS_ren"] = {
         "WindOn": PathTemp + "Geothermal_WGC_WindOn_reg_TimeSeries_80_100_120_2015.csv",
         "WindOff": PathTemp + "",
@@ -678,6 +692,7 @@ def output_paths(paths, param):
         "Hydro": paths["proc"] + "Hydro.shp",
     }
     paths["potential_ren"] = paths["proc"] + "Renewables_potential.csv"
+    paths["hydro_regions"] = paths["proc"] + "TS_hydro_" + param["subregions_name"] + "_" + year + ".csv"
 
     # Other processes and storage
     paths["process_raw"] = paths["proc"] + "processes_and_storage_agg_bef_cleaning.csv"

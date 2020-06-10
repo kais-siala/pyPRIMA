@@ -16,9 +16,11 @@ if __name__ == "__main__":
     # clean_grid_Mekong(paths, param)
     # clean_sector_shares_Eurostat(paths, param)
     # clean_load_data_ENTSOE(paths, param)
+    # clean_load_data_Mekong(paths, param)
     # distribute_renewable_capacities_IRENA(paths, param)
     # clean_processes_and_storage_FRESNA(paths, param)
     clean_processes_and_storage_Mekong(paths, param)
+    clean_hydro_data_Mekong(paths, param)
 
     ## Generate intermediate files
     # generate_sites_from_shapefile(paths, param)
@@ -30,5 +32,5 @@ if __name__ == "__main__":
     # generate_commodities(paths, param)
 
     ## Generate model files
-    # generate_urbs_model(paths, param)
+    generate_urbs_model(paths, param)
     # generate_evrys_model(paths, param)

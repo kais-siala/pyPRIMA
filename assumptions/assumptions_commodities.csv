@@ -1,4 +1,16 @@
 year;Commodity;Type_urbs;Type_evrys;price;max;maxperhour;annual;losses
+2016;CO2;Env;ENV;0;inf;inf;inf;0
+2016;Coal;Stock;SUP-Stock;5;inf;inf;inf;0
+2016;Elec;Demand;DEM;;;;;0
+2016;Gas;Stock;SUP-Stock;5,85;inf;inf;inf;0
+2016;Geothermal;Stock;SUP-Stock;0;inf;inf;inf;0
+2016;Oil;Stock;SUP-Stock;8;inf;inf;inf;0
+2016;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
+2016;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2016;Waste;Stock;SUP-Stock;3,02;inf;inf;inf;0
+2016;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2016;Bioenergy;Stock;SUP-Stock;3,02;inf;inf;inf;0
+2016;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
 2015;Biogas;Stock;SUP-Stock;23;inf;inf;inf;0
 2015;Biomass;Stock;SUP-Stock;23;inf;inf;inf;0
 2015;CO2;Env;ENV;12;inf;inf;inf;0
