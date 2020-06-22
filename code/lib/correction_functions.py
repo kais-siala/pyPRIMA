@@ -342,7 +342,8 @@ def clean_load_data_Mekong(paths, param):
 
     # Remove useless columns
     df_raw_laos.drop(columns=["Unnamed: 0", "Year", "Month", "Day", "Hour"], inplace=True)
-    df_raw_thailand.drop(columns=["Year", "Month", "Day", "Hour"], inplace=True)
+    df_raw_thailand.drop(columns=["Year", "Month", "Day", "Hour", "Banteay_Meanchay", "Pakbo", "Paksan"], inplace=True)
+    df_raw_thailand.rename(columns={"BanDon": "BanDonThailand"}, inplace=True)
     df_raw_cambodia.drop(columns=["Year", "Month", "Day", "Hour"], inplace=True)
     
     # Transpose and append
@@ -351,15 +352,18 @@ def clean_load_data_Mekong(paths, param):
 
     # Read map of substations
     gdf_regions = gpd.read_file(paths["subregions"])
-    gdf_sub_laos = gpd.read_file(paths["substations_laos"]).to_crs(gdf_regions.crs)
-    gdf_sub_thailand = gpd.read_file(paths["substations_thailand"]).to_crs(gdf_regions.crs)
-    gdf_sub_cambodia = gpd.read_file(paths["substations_cambodia"]).to_crs(gdf_regions.crs)
+    gdf_sub_laos = gpd.read_file(paths["substations_laos"]).to_crs("epsg:32647")
+    gdf_sub_thailand = gpd.read_file(paths["substations_thailand"])
+    gdf_sub_cambodia = gpd.read_file(paths["substations_cambodia"])
     gdf_sub = gdf_sub_laos.append(gdf_sub_thailand)
     gdf_sub = gdf_sub.append(gdf_sub_cambodia)
+    gdf_sub.crs = "epsg:32647"
+    gdf_sub = gdf_sub.to_crs(gdf_regions.crs)
     
     # Spatial join to match substations with regions
     dict_sub = gpd.sjoin(gdf_sub, gdf_regions, how="left", op="intersects")[["substation", "NAME_SHORT"]].reset_index()
     dict_sub.loc[dict_sub["substation"]=="NakadokMinning", "NAME_SHORT"] = "LAO03"
+    dict_sub.loc[dict_sub["substation"]=="Ban Don", "substation"] = "BanDonThailand"
     
     for ind in dict_sub.index:
         try:
@@ -367,13 +371,12 @@ def clean_load_data_Mekong(paths, param):
             dict_sub.loc[ind, "substation"] = dict_sub.loc[ind, "substation"].replace("-", "")
         except:
             dict_sub.loc[ind, "substation"] = "KPT"
-    dict_sub = dict_sub.drop_duplicates(["substation"])
-            
+    dict_sub.drop_duplicates(["substation"], inplace=True)
 
     # Join
     df_joined = df_raw.reset_index().groupby("index").sum().join(dict_sub.set_index("substation")[["NAME_SHORT"]], how="left")
     df_joined.loc["BMC", "NAME_SHORT"] = "KHM01"
-    df_joined.loc["Banteay_Meanchay", "NAME_SHORT"] = "KHM01"
+    df_joined.loc["BTB", "NAME_SHORT"] = "KHM02"
     df_joined.loc["BanBueng", "NAME_SHORT"] = "THA12"
     df_joined.loc["Chacheongsao", "NAME_SHORT"] = "THA06"
     df_joined.loc["Chiangrai", "NAME_SHORT"] = "THA11"
@@ -419,7 +422,7 @@ def clean_load_data_Mekong(paths, param):
         else:
             import pdb; pdb.set_trace()
             df_joined.loc[ind, "NAME_SHORT"] = "Unknown"
-            
+    
     # Group
     df_grouped = df_joined.reset_index().drop(columns="index")
     df_grouped = df_grouped.groupby(["NAME_SHORT"]).sum().T
@@ -463,10 +466,13 @@ def clean_hydro_data_Mekong(paths, param):
     # Read map of power plants
     gdf_regions = gpd.read_file(paths["subregions"])
     gdf_pp_laos = gpd.read_file(paths["hydro_pp_laos"]).to_crs(gdf_regions.crs)
+    gdf_pp_laos = gdf_pp_laos.loc[gdf_pp_laos["plant"]!="Sirindhorn"]
     gdf_pp_thailand = gpd.read_file(paths["hydro_pp_thailand"]).to_crs(gdf_regions.crs)
     gdf_pp_cambodia = gpd.read_file(paths["hydro_pp_cambodia"]).to_crs(gdf_regions.crs)
+    gdf_pp_cambodia = gdf_pp_cambodia.loc[gdf_pp_cambodia["plant"]!="Salabam"]
     gdf_pp = gdf_pp_laos.append(gdf_pp_thailand)
     gdf_pp = gdf_pp.append(gdf_pp_cambodia)
+    gdf_pp = gdf_pp.to_crs(gdf_regions.crs)
     
     # Spatial join to match substations with regions
     dict_pp = gpd.sjoin(gdf_pp, gdf_regions, how="left", op="intersects")[["plant", "NAME_SHORT", "MW"]].reset_index()
@@ -480,9 +486,8 @@ def clean_hydro_data_Mekong(paths, param):
     dict_pp.loc[dict_pp["plant"]=="ThaThungNa", "plant"] = "ThungNa"
     
     for ind in dict_pp.index:
-        dict_pp.loc[ind, "plant"] = dict_pp.loc[ind, "plant"].replace(" ", "")
-        
-    dict_pp = dict_pp.drop_duplicates(["plant"])
+        dict_pp.loc[ind, "plant"] = dict_pp.loc[ind, "plant"].replace(" ", "") 
+    dict_pp = dict_pp.drop(columns="index").groupby(["plant", "NAME_SHORT"]).sum().reset_index()
             
     # Join
     df_joined = df_raw.reset_index().groupby("index").sum().join(dict_pp.set_index("plant")[["NAME_SHORT", "MW"]], how="left")
@@ -820,8 +825,40 @@ def clean_processes_and_storage_Mekong(paths, param):
     dict_technologies = dict_technologies["Model names"].to_dict()
 
     # Get data from the Mekong database
-    Process = pd.read_csv(paths["PP_Mekong"], header=0, sep=";", decimal=",", usecols=[1,4,5,6,8,9,11,12])
-    Process.rename(columns={"COUNTRY": "Country", "UNIT": "Name", "MW": "inst-cap", "LAT": "Latitude", "LONG": "Longitude", "FUEL": "Technology", "YEAR": "YearCommissioned"}, inplace=True)
+    gdf_pp_laos = gpd.read_file(paths["pp_laos"]).rename(columns={"type": "Technology", "plant": "Name", "MW": "inst-cap"}).drop(columns=["Id"])
+    gdf_pp_laos["Country"] = "LAO"
+    gdf_pp_thailand = gpd.read_file(paths["pp_thailand"]).rename(columns={"plant": "Name"}).drop(columns=["detype", "d77", "d79", "d83", "d88", "d89", "d93", "Id"])
+    gdf_pp_thailand_turb = pd.read_csv(paths["pp_thailand2"]).rename(columns={"plant": "Name"}).set_index("FID")
+    gdf_pp_thailand = gdf_pp_thailand.join(gdf_pp_thailand_turb[["turb"]])
+    for ind in gdf_pp_thailand.index:
+        for col in ["coal", "biomass", "waste_heat", "oil", "gas"]:
+            if gdf_pp_thailand.loc[ind, col]:
+                new_series = gdf_pp_thailand.loc[ind].copy()
+                new_series["Technology"] = col
+                if col in ["oil", "gas"]:
+                    new_series["Technology"] = col + "_" + gdf_pp_thailand.loc[ind, "turb"]
+                new_series["inst-cap"] = gdf_pp_thailand.loc[ind, col]
+                gdf_pp_thailand = gdf_pp_thailand.append(new_series, ignore_index=True)
+    gdf_pp_thailand = gdf_pp_thailand.dropna(axis=0).drop(columns=["coal", "biomass", "waste_heat", "oil", "gas", "turb"])
+    gdf_pp_thailand["Country"] = "THA"
+    gdf_pp_thailand = gdf_pp_thailand.loc[gdf_pp_thailand["Name"]!="HongSaLignite"]
+    gdf_pp_cambodia = gpd.read_file(paths["pp_cambodia"]).rename(columns={"type": "Technology", "plant": "Name", "MW": "inst-cap"}).drop(columns=["Id"])
+    gdf_pp_cambodia["Country"] = "KHM"
+    Process = gdf_pp_laos.append(gdf_pp_cambodia)
+    Process.loc[Process["Technology"]=="oil", "Technology"] = "oil_ic"
+    Process.loc[Process["Name"]=="KHAN_DANG_KOR", "Technology"] = "oil_st"
+    Process.loc[Process["Name"]=="KHAN_MEAN_CHAY", "Technology"] = "oil_st"
+    Process = Process.append(gdf_pp_thailand)
+    Process = gpd.GeoDataFrame(Process, geometry="geometry", crs=gdf_pp_laos.crs).to_crs("epsg:4326")
+    Process = Process.loc[Process["Technology"]!="import"]
+    Process["Longitude"] = Process["geometry"].y
+    Process["Latitude"] = Process["geometry"].x
+    Process = Process.drop(columns=["geometry"])
+    
+    Process_SW = pd.read_csv(paths["PP_Mekong"], header=0, sep=";", decimal=",", usecols=[1,4,5,6,8,9,11,12])
+    Process_SW.rename(columns={"COUNTRY": "Country", "UNIT": "Name", "MW": "inst-cap", "LAT": "Latitude", "LONG": "Longitude", "FUEL": "Technology", "YEAR": "YearCommissioned"}, inplace=True)
+    Process_SW = Process_SW.loc[(Process_SW["Technology"]=="SOLAR") | (Process_SW["Technology"]=="WIND")]
+    Process = Process.append(Process_SW, ignore_index=True).reset_index(drop=True)
 
     # Obtain preliminary information before cleaning
     Process["Technology"].fillna("NaN", inplace=True)
@@ -837,8 +874,8 @@ def clean_processes_and_storage_Mekong(paths, param):
     Process["Type"] = Process["Technology"]
     for key in dict_technologies.keys():
         Process.loc[Process["Type"] == key, "Type"] = dict_technologies[key]
-    Process.loc[Process["Type"]== "Gas", "Type"] = Process.loc[Process["Type"]== "Gas"].apply(lambda x: x["Type"] + "_" + x["TURBINE/TECH"][:2], axis=1)
-    Process.loc[Process["Type"]== "Oil", "Type"] = Process.loc[Process["Type"]== "Oil"].apply(lambda x: x["Type"] + "_" + x["TURBINE/TECH"][:2], axis=1)
+    #Process.loc[Process["Type"]== "Gas", "Type"] = Process.loc[Process["Type"]== "Gas"].apply(lambda x: x["Type"] + "_" + x["TURBINE/TECH"][:2], axis=1)
+    #Process.loc[Process["Type"]== "Oil", "Type"] = Process.loc[Process["Type"]== "Oil"].apply(lambda x: x["Type"] + "_" + x["TURBINE/TECH"][:2], axis=1)
     
     # Remove useless rows (Type not needed)
     Process.dropna(subset=["Type"], inplace=True)
@@ -1105,8 +1142,8 @@ def clean_grid_Mekong(paths, param):
     grid_corrected["l_id"] = grid_corrected.index
     grid_corrected["V1_long"] = grid_corrected.apply(lambda x: x['geometry'].coords[0][0], axis=1)
     grid_corrected["V1_lat"] = grid_corrected.apply(lambda x: x['geometry'].coords[0][1], axis=1)
-    grid_corrected["V2_long"] = grid_corrected.apply(lambda x: x['geometry'].coords[1][0], axis=1)
-    grid_corrected["V2_lat"] = grid_corrected.apply(lambda x: x['geometry'].coords[1][1], axis=1)
+    grid_corrected["V2_long"] = grid_corrected.apply(lambda x: x['geometry'].coords[-1][0], axis=1)
+    grid_corrected["V2_lat"] = grid_corrected.apply(lambda x: x['geometry'].coords[-1][1], axis=1)
 
     # Group lines with same IDs
     grid_grouped = (

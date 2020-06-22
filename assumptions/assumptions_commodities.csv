@@ -3,7 +3,6 @@ year;Commodity;Type_urbs;Type_evrys;price;max;maxperhour;annual;losses
 2016;Coal;Stock;SUP-Stock;5;inf;inf;inf;0
 2016;Elec;Demand;DEM;;;;;0
 2016;Gas;Stock;SUP-Stock;5,85;inf;inf;inf;0
-2016;Geothermal;Stock;SUP-Stock;0;inf;inf;inf;0
 2016;Oil;Stock;SUP-Stock;8;inf;inf;inf;0
 2016;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
 2016;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0

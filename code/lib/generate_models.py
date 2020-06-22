@@ -37,14 +37,14 @@ def generate_urbs_model(paths, param):
         proc = pd.read_csv(paths["process_regions"], sep=";", decimal=",")
         proc.rename(columns={"Type": "Process",
                              "start-cost": "startup-cost"}, inplace=True)
-        proc = proc[["Site", "Process", "inst-cap", "cap-lo", "cap-up", "max-grad", "min-frac", "inv-cost", "fix-cost", "var-cost",
-                     "startup-cost", "wacc", "depreciation", "area-per-cap"]]
-        proc = proc.groupby(["Site", "Process", "max-grad", "min-frac", "inv-cost", "fix-cost", "var-cost", "startup-cost", "wacc", "depreciation", "area-per-cap"])\
+        proc = proc[["Site", "Process", "inst-cap", "cap-lo", "cap-up", "max-grad", "min-fraction", "inv-cost", "fix-cost", "var-cost",
+                     "startup-cost", "reliability", "cap-credit", "wacc", "depreciation", "area-per-cap"]]
+        proc = proc.groupby(["Site", "Process", "max-grad", "min-fraction", "inv-cost", "fix-cost", "var-cost", "startup-cost", "reliability", "cap-credit", "wacc", "depreciation", "area-per-cap"])\
                    .sum().reset_index()
         # Remove power plants <5MW
         proc = proc.loc[proc["inst-cap"]>=5]
-        proc = proc[["Site", "Process", "inst-cap", "cap-lo", "cap-up", "max-grad", "min-frac", "inv-cost", "fix-cost", "var-cost",
-                     "startup-cost", "wacc", "depreciation", "area-per-cap"]]
+        proc = proc[["Site", "Process", "inst-cap", "cap-lo", "cap-up", "max-grad", "min-fraction", "inv-cost", "fix-cost", "var-cost",
+                     "startup-cost", "reliability", "cap-credit", "wacc", "depreciation", "area-per-cap"]]
         for col in range(2, proc.shape[1]):
             try:
                 proc.iloc[:, col] = proc.iloc[:, col].str.replace(".", "").astype("f")
@@ -71,7 +71,7 @@ def generate_urbs_model(paths, param):
         grid = pd.read_csv(paths["grid_completed"], sep=";", decimal=",")
         grid.rename(columns={"tr_type": "Transmission"}, inplace=True)
         grid = grid[['Site In', 'Site Out', 'Transmission', 'Commodity', 'eff', 'inv-cost', 'fix-cost', 'var-cost',
-                     'inst-cap', 'cap-lo', 'cap-up', 'wacc', 'depreciation']]
+                     'inst-cap', 'cap-lo', 'cap-up', 'cap-credit', 'wacc', 'depreciation']]
         for col in range(4, grid.shape[1]):
             try:
                 grid.iloc[:, col] = grid.iloc[:, col].str.replace(".", "").astype("f")

@@ -490,6 +490,23 @@ def get_sites(points_shp, param):
 
     # Remove duplicates that lie in the border between two regions
     located = located.drop_duplicates(subset=["Name"], inplace=False)
+    
+    # Correct regions manually
+    located.loc[located["Name"]=="Bang_Bo", "Site"] = "THA57"
+    located.loc[located["Name"]=="Ratchaburi", "Site"] = "THA58"
+    located.loc[located["Name"]=="Ratchaburi1", "Site"] = "THA58"
+    located.loc[located["Name"]=="Ratchaburi2", "Site"] = "THA58"
+    located.loc[located["Name"]=="IPP", "Site"] = "THA12"
+    located.loc[located["Name"]=="MapTaPhut", "Site"] = "THA53"
+    located.loc[located["Name"]=="Ratchaburi_Thermal", "Site"] = "THA52"
+    located.loc[located["Name"]=="Khanom", "Site"] = "THA67"
+    located.loc[located["Name"]=="GhecoOne", "Site"] = "THA53"
+    located.loc[located["Name"]=="Rayong_1", "Site"] = "THA53"
+    located.loc[located["Name"]=="South_Bangkok", "Site"] = "THA57"
+    located.loc[located["Name"]=="South_Bangkok1", "Site"] = "THA57"
+    located.loc[located["Name"]=="South_Bangkok2", "Site"] = "THA57"
+    located.loc[located["Name"]=="South_Bangkok3", "Site"] = "THA57"
+    located.loc[located["Name"]=="Sadao", "Site"] = "THA64"
 
     # Remove features that do not lie in any subregion
     located.dropna(axis=0, subset=["Site"], inplace=True)

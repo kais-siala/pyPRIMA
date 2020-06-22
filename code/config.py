@@ -559,9 +559,15 @@ def processes_input_paths(paths, param):
         }
     }
 
+    PathTemp = root + "01 Raw inputs" + fs + "to sort" + fs + "Powergrid_GIS_Data" + fs
+    paths["pp_laos"] = PathTemp + "laos_grid" + fs + "LaoThermoPrj.shp"
+    paths["pp_thailand"] = PathTemp + "thai_grid" + fs + "ThaiThermoPrj.shp"
+    paths["pp_thailand2"] = PathTemp + "thai_grid" + fs + "Thai_cap_type_turbine.csv"
+    paths["pp_cambodia"] = PathTemp + "cambodia_grid" + fs + "CamboThermoPrj.shp"
+    
     PathTemp = root + "01 Raw inputs" + fs + "to sort" + fs + "Powerplant_data_alltypes" + fs
-    paths[
-        "PP_Mekong"] = PathTemp + "Powerplant_Data_alltypes_LaoThaiCamb.csv"
+    paths["PP_Mekong"] = PathTemp + "Powerplant_Data_alltypes_LaoThaiCamb.csv"
+    
 
     return paths
 
