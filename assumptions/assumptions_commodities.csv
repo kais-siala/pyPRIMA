@@ -1,117 +1,183 @@
-year;Commodity;Type_urbs;Type_evrys;price;max;maxperhour;annual;losses
-2016;CO2;Env;ENV;0;inf;inf;inf;0
-2016;Coal;Stock;SUP-Stock;5;inf;inf;inf;0
-2016;Elec;Demand;DEM;;;;;0
-2016;Gas;Stock;SUP-Stock;5,85;inf;inf;inf;0
-2016;Oil;Stock;SUP-Stock;8;inf;inf;inf;0
-2016;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
-2016;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
-2016;Waste;Stock;SUP-Stock;3,02;inf;inf;inf;0
-2016;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
-2016;Bioenergy;Stock;SUP-Stock;3,02;inf;inf;inf;0
-2016;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
-2015;Biogas;Stock;SUP-Stock;23;inf;inf;inf;0
-2015;Biomass;Stock;SUP-Stock;23;inf;inf;inf;0
-2015;CO2;Env;ENV;12;inf;inf;inf;0
-2015;Coal;Stock;SUP-Stock;10,5365161;inf;inf;inf;0
-2015;Elec;Demand;DEM;;;;;0
-2015;Gas;Stock;SUP-Stock;24,80815129;inf;inf;inf;0
-2015;Geothermal;Stock;SUP-Stock;0;inf;inf;inf;0
-2015;Hydro_Large;SupIm;SUP-Intermittent;0;inf;inf;;0
-2015;Hydro_Small;SupIm;SUP-Intermittent;0;inf;inf;;0
-2015;Lignite;Stock;SUP-Stock;7;inf;inf;inf;0
-2015;Liquid biofuels;Stock;SUP-Stock;23;inf;inf;inf;0
-2015;Oil;Stock;SUP-Stock;40,25785851;inf;inf;inf;0
-2015;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
-2015;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
-2015;Tidal;Stock;SUP-Stock;0;inf;inf;inf;0
-2015;Uranium;Stock;SUP-Stock;2,33;inf;inf;inf;0
-2015;Waste;Stock;SUP-Stock;0;inf;inf;inf;0
-2015;WindOff;SupIm;SUP-Intermittent;0;inf;inf;1;0
-2015;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
-2015;Bioenergy;Stock;SUP-Stock;23;inf;inf;inf;0
-2015;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
-2020;Biogas;Stock;SUP-Stock;23;inf;inf;inf;0
-2020;Biomass;Stock;SUP-Stock;23;inf;inf;inf;0
-2020;CO2;Env;ENV;12;inf;inf;inf;0
-2020;Coal;Stock;SUP-Stock;10,5365161;inf;inf;inf;0
-2020;Elec;Demand;DEM;;;;;0
-2020;Gas;Stock;SUP-Stock;24,80815129;inf;inf;inf;0
-2020;Geothermal;Stock;SUP-Stock;0;inf;inf;inf;0
-2020;Hydro_Large;SupIm;SUP-Intermittent;0;inf;inf;;0
-2020;Hydro_Small;SupIm;SUP-Intermittent;0;inf;inf;;0
-2020;Lignite;Stock;SUP-Stock;7;inf;inf;inf;0
-2020;Liquid biofuels;Stock;SUP-Stock;23;inf;inf;inf;0
-2020;Oil;Stock;SUP-Stock;40,25785851;inf;inf;inf;0
-2020;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
-2020;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
-2020;Tidal;Stock;SUP-Stock;0;inf;inf;inf;0
-2020;Uranium;Stock;SUP-Stock;2,33;inf;inf;inf;0
-2020;Waste;Stock;SUP-Stock;0;inf;inf;inf;0
-2020;WindOff;SupIm;SUP-Intermittent;0;inf;inf;1;0
-2020;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
-2020;Bioenergy;Stock;SUP-Stock;23;inf;inf;inf;0
-2020;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
-2050;Biogas;Stock;SUP-Stock;23;inf;inf;inf;0
-2050;Biomass;Stock;SUP-Stock;23;inf;inf;inf;0
-2050;CO2;Env;ENV;12;inf;inf;inf;0
-2050;Coal;Stock;SUP-Stock;10,5365161;inf;inf;inf;0
-2050;Elec;Demand;DEM;;;;;0
-2050;Gas;Stock;SUP-Stock;24,80815129;inf;inf;inf;0
-2050;Geothermal;Stock;SUP-Stock;0;inf;inf;inf;0
-2050;Hydro_Large;SupIm;SUP-Intermittent;0;inf;inf;;0
-2050;Hydro_Small;SupIm;SUP-Intermittent;0;inf;inf;;0
-2050;Lignite;Stock;SUP-Stock;7;inf;inf;inf;0
-2050;Liquid biofuels;Stock;SUP-Stock;23;inf;inf;inf;0
-2050;Oil;Stock;SUP-Stock;40,25785851;inf;inf;inf;0
-2050;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
-2050;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
-2050;Tidal;Stock;SUP-Stock;0;inf;inf;inf;0
-2050;Uranium;Stock;SUP-Stock;2,33;inf;inf;inf;0
-2050;Waste;Stock;SUP-Stock;0;inf;inf;inf;0
-2050;WindOff;SupIm;SUP-Intermittent;0;inf;inf;1;0
-2050;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
-2050;Bioenergy;Stock;SUP-Stock;23;inf;inf;inf;0
-2050;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
-2030;Biogas;Stock;SUP-Stock;23;inf;inf;inf;0
-2030;Biomass;Stock;SUP-Stock;23;inf;inf;inf;0
-2030;CO2;Env;ENV;12;inf;inf;inf;0
-2030;Coal;Stock;SUP-Stock;10,5365161;inf;inf;inf;0
-2030;Elec;Demand;DEM;;;;;0
-2030;Gas;Stock;SUP-Stock;24,80815129;inf;inf;inf;0
-2030;Geothermal;Stock;SUP-Stock;0;inf;inf;inf;0
-2030;Hydro_Large;SupIm;SUP-Intermittent;0;inf;inf;;0
-2030;Hydro_Small;SupIm;SUP-Intermittent;0;inf;inf;;0
-2030;Lignite;Stock;SUP-Stock;7;inf;inf;inf;0
-2030;Liquid biofuels;Stock;SUP-Stock;23;inf;inf;inf;0
-2030;Oil;Stock;SUP-Stock;40,25785851;inf;inf;inf;0
-2030;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
-2030;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
-2030;Tidal;Stock;SUP-Stock;0;inf;inf;inf;0
-2030;Uranium;Stock;SUP-Stock;2,33;inf;inf;inf;0
-2030;Waste;Stock;SUP-Stock;0;inf;inf;inf;0
-2030;WindOff;SupIm;SUP-Intermittent;0;inf;inf;1;0
-2030;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
-2030;Bioenergy;Stock;SUP-Stock;23;inf;inf;inf;0
-2030;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
-2040;Biogas;Stock;SUP-Stock;23;inf;inf;inf;0
-2040;Biomass;Stock;SUP-Stock;23;inf;inf;inf;0
-2040;CO2;Env;ENV;12;inf;inf;inf;0
-2040;Coal;Stock;SUP-Stock;10,5365161;inf;inf;inf;0
-2040;Elec;Demand;DEM;;;;;0
-2040;Gas;Stock;SUP-Stock;24,80815129;inf;inf;inf;0
-2040;Geothermal;Stock;SUP-Stock;0;inf;inf;inf;0
-2040;Hydro_Large;SupIm;SUP-Intermittent;0;inf;inf;;0
-2040;Hydro_Small;SupIm;SUP-Intermittent;0;inf;inf;;0
-2040;Lignite;Stock;SUP-Stock;7;inf;inf;inf;0
-2040;Liquid biofuels;Stock;SUP-Stock;23;inf;inf;inf;0
-2040;Oil;Stock;SUP-Stock;40,25785851;inf;inf;inf;0
-2040;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
-2040;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
-2040;Tidal;Stock;SUP-Stock;0;inf;inf;inf;0
-2040;Uranium;Stock;SUP-Stock;2,33;inf;inf;inf;0
-2040;Waste;Stock;SUP-Stock;0;inf;inf;inf;0
-2040;WindOff;SupIm;SUP-Intermittent;0;inf;inf;1;0
-2040;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
-2040;Bioenergy;Stock;SUP-Stock;23;inf;inf;inf;0
-2040;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
+year;currency;source;Commodity;Type_urbs;Type_evrys;price;max;maxperhour;annual;losses
+2016_old;USD;SUTD assumptions;CO2;Env;ENV;0;inf;inf;inf;0
+2016_old;USD;SUTD assumptions;Coal;Stock;SUP-Stock;5;inf;inf;inf;0
+2016_old;USD;SUTD assumptions;Elec;Demand;DEM;;;;;0
+2016_old;USD;SUTD assumptions;Gas;Stock;SUP-Stock;5,85;inf;inf;inf;0
+2016_old;USD;SUTD assumptions;Oil;Stock;SUP-Stock;8;inf;inf;inf;0
+2016_old;USD;SUTD assumptions;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
+2016_old;USD;SUTD assumptions;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2016_old;USD;SUTD assumptions;Waste;Stock;SUP-Stock;3,02;inf;inf;inf;0
+2016_old;USD;SUTD assumptions;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2016_old;USD;SUTD assumptions;Bioenergy;Stock;SUP-Stock;3,02;inf;inf;inf;0
+2016_old;USD;SUTD assumptions;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
+2016;USD;;CO2;Env;ENV;0;inf;inf;inf;0
+2016;USD;Approx cost from WEO 2019, heat rate from https://www.world-nuclear.org/information-library/facts-and-figures/heat-values-of-various-fuels.aspx;Coal;Stock;SUP-Stock;16,5;inf;inf;inf;0
+2016;USD;;Elec;Demand;DEM;;;;;0
+2016;USD;Approx cost from WEO 2019;Gas;Stock;SUP-Stock;30,71;inf;inf;inf;0
+2016;USD;Approx cost from WEO 2019;Oil;Stock;SUP-Stock;40;inf;inf;inf;0
+2016;USD;;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
+2016;USD;;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2016;USD;SUTD assumptions;Waste_heat;Stock;SUP-Stock;3,02;inf;inf;inf;0
+2016;USD;;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2016;USD;ASEAN LCOE report p.68, 60% moisture content, https://www.world-nuclear.org/information-library/facts-and-figures/heat-values-of-various-fuels.aspx;Bioenergy;Stock;SUP-Stock;10,02;inf;inf;inf;0
+2016;USD;;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
+2020;USD;;CO2;Env;ENV;0;inf;inf;inf;0
+2020;USD;Approx cost from WEO 2019, heat rate from https://www.world-nuclear.org/information-library/facts-and-figures/heat-values-of-various-fuels.aspx;Coal;Stock;SUP-Stock;15;inf;inf;inf;0
+2020;USD;;Elec;Demand;DEM;;;;;0
+2020;USD;Approx cost from WEO 2019;Gas;Stock;SUP-Stock;30,71;inf;inf;inf;0
+2020;USD;Approx cost from WEO 2019;Oil;Stock;SUP-Stock;41,18;inf;inf;inf;0
+2020;USD;;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
+2020;USD;;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2020;USD;SUTD assumptions;Waste_heat;Stock;SUP-Stock;3,02;inf;inf;inf;0
+2020;USD;;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2020;USD;ASEAN LCOE report p.68, 60% moisture content, https://www.world-nuclear.org/information-library/facts-and-figures/heat-values-of-various-fuels.aspx;Bioenergy;Stock;SUP-Stock;10,02;inf;inf;inf;0
+2020;USD;;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
+2025;USD;;CO2;Env;ENV;0;inf;inf;inf;0
+2025;USD;Approx cost from WEO 2019, heat rate from https://www.world-nuclear.org/information-library/facts-and-figures/heat-values-of-various-fuels.aspx;Coal;Stock;SUP-Stock;12,75;inf;inf;inf;0
+2025;USD;;Elec;Demand;DEM;;;;;0
+2025;USD;Approx cost from WEO 2019;Gas;Stock;SUP-Stock;32,42;inf;inf;inf;0
+2025;USD;Approx cost from WEO 2019;Oil;Stock;SUP-Stock;47,65;inf;inf;inf;0
+2025;USD;;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
+2025;USD;;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2025;USD;SUTD assumptions;Waste_heat;Stock;SUP-Stock;3,02;inf;inf;inf;0
+2025;USD;;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2025;USD;ASEAN LCOE report p.68, 60% moisture content, https://www.world-nuclear.org/information-library/facts-and-figures/heat-values-of-various-fuels.aspx;Bioenergy;Stock;SUP-Stock;10,02;inf;inf;inf;0
+2025;USD;;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
+2030;USD;;CO2;Env;ENV;0;inf;inf;inf;0
+2030;USD;Approx cost from WEO 2019, heat rate from https://www.world-nuclear.org/information-library/facts-and-figures/heat-values-of-various-fuels.aspx;Coal;Stock;SUP-Stock;13,2;inf;inf;inf;0
+2030;USD;;Elec;Demand;DEM;;;;;0
+2030;USD;Approx cost from WEO 2019;Gas;Stock;SUP-Stock;32,42;inf;inf;inf;0
+2030;USD;Approx cost from WEO 2019;Oil;Stock;SUP-Stock;51,76;inf;inf;inf;0
+2030;USD;;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
+2030;USD;;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2030;USD;SUTD assumptions;Waste_heat;Stock;SUP-Stock;3,02;inf;inf;inf;0
+2030;USD;;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2030;USD;ASEAN LCOE report p.68, 60% moisture content, https://www.world-nuclear.org/information-library/facts-and-figures/heat-values-of-various-fuels.aspx;Bioenergy;Stock;SUP-Stock;10,02;inf;inf;inf;0
+2030;USD;;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
+2035;USD;;CO2;Env;ENV;0;inf;inf;inf;0
+2035;USD;Approx cost from WEO 2019, heat rate from https://www.world-nuclear.org/information-library/facts-and-figures/heat-values-of-various-fuels.aspx;Coal;Stock;SUP-Stock;13,5;inf;inf;inf;0
+2035;USD;;Elec;Demand;DEM;;;;;0
+2035;USD;Approx cost from WEO 2019;Gas;Stock;SUP-Stock;32,42;inf;inf;inf;0
+2035;USD;Approx cost from WEO 2019;Oil;Stock;SUP-Stock;56,47;inf;inf;inf;0
+2035;USD;;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
+2035;USD;;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2035;USD;SUTD assumptions;Waste_heat;Stock;SUP-Stock;3,02;inf;inf;inf;0
+2035;USD;;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2035;USD;ASEAN LCOE report p.68, 60% moisture content, https://www.world-nuclear.org/information-library/facts-and-figures/heat-values-of-various-fuels.aspx;Bioenergy;Stock;SUP-Stock;10,02;inf;inf;inf;0
+2035;USD;;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
+2037;USD;;CO2;Env;ENV;0;inf;inf;inf;0
+2037;USD;Approx cost from WEO 2019, heat rate from https://www.world-nuclear.org/information-library/facts-and-figures/heat-values-of-various-fuels.aspx;Coal;Stock;SUP-Stock;13,5;inf;inf;inf;0
+2037;USD;;Elec;Demand;DEM;;;;;0
+2037;USD;Approx cost from WEO 2019;Gas;Stock;SUP-Stock;32,42;inf;inf;inf;0
+2037;USD;Approx cost from WEO 2019;Oil;Stock;SUP-Stock;58,82;inf;inf;inf;0
+2037;USD;;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
+2037;USD;;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2037;USD;SUTD assumptions;Waste_heat;Stock;SUP-Stock;3,02;inf;inf;inf;0
+2037;USD;;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2037;USD;ASEAN LCOE report p.68, 60% moisture content, https://www.world-nuclear.org/information-library/facts-and-figures/heat-values-of-various-fuels.aspx;Bioenergy;Stock;SUP-Stock;10,02;inf;inf;inf;0
+2037;USD;;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
+2015_old;;;Biogas;Stock;SUP-Stock;23;inf;inf;inf;0
+2015_old;;;Biomass;Stock;SUP-Stock;23;inf;inf;inf;0
+2015_old;;;CO2;Env;ENV;12;inf;inf;inf;0
+2015_old;;;Coal;Stock;SUP-Stock;10,5365161;inf;inf;inf;0
+2015_old;;;Elec;Demand;DEM;;;;;0
+2015_old;;;Gas;Stock;SUP-Stock;24,80815129;inf;inf;inf;0
+2015_old;;;Geothermal;Stock;SUP-Stock;0;inf;inf;inf;0
+2015_old;;;Hydro_Large;SupIm;SUP-Intermittent;0;inf;inf;;0
+2015_old;;;Hydro_Small;SupIm;SUP-Intermittent;0;inf;inf;;0
+2015_old;;;Lignite;Stock;SUP-Stock;7;inf;inf;inf;0
+2015_old;;;Liquid biofuels;Stock;SUP-Stock;23;inf;inf;inf;0
+2015_old;;;Oil;Stock;SUP-Stock;40,25785851;inf;inf;inf;0
+2015_old;;;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
+2015_old;;;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2015_old;;;Tidal;Stock;SUP-Stock;0;inf;inf;inf;0
+2015_old;;;Uranium;Stock;SUP-Stock;2,33;inf;inf;inf;0
+2015_old;;;Waste;Stock;SUP-Stock;0;inf;inf;inf;0
+2015_old;;;WindOff;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2015_old;;;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2015_old;;;Bioenergy;Stock;SUP-Stock;23;inf;inf;inf;0
+2015_old;;;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
+2020_old;;;Biogas;Stock;SUP-Stock;23;inf;inf;inf;0
+2020_old;;;Biomass;Stock;SUP-Stock;23;inf;inf;inf;0
+2020_old;;;CO2;Env;ENV;12;inf;inf;inf;0
+2020_old;;;Coal;Stock;SUP-Stock;10,5365161;inf;inf;inf;0
+2020_old;;;Elec;Demand;DEM;;;;;0
+2020_old;;;Gas;Stock;SUP-Stock;24,80815129;inf;inf;inf;0
+2020_old;;;Geothermal;Stock;SUP-Stock;0;inf;inf;inf;0
+2020_old;;;Hydro_Large;SupIm;SUP-Intermittent;0;inf;inf;;0
+2020_old;;;Hydro_Small;SupIm;SUP-Intermittent;0;inf;inf;;0
+2020_old;;;Lignite;Stock;SUP-Stock;7;inf;inf;inf;0
+2020_old;;;Liquid biofuels;Stock;SUP-Stock;23;inf;inf;inf;0
+2020_old;;;Oil;Stock;SUP-Stock;40,25785851;inf;inf;inf;0
+2020_old;;;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
+2020_old;;;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2020_old;;;Tidal;Stock;SUP-Stock;0;inf;inf;inf;0
+2020_old;;;Uranium;Stock;SUP-Stock;2,33;inf;inf;inf;0
+2020_old;;;Waste;Stock;SUP-Stock;0;inf;inf;inf;0
+2020_old;;;WindOff;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2020_old;;;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2020_old;;;Bioenergy;Stock;SUP-Stock;23;inf;inf;inf;0
+2020_old;;;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
+2050_old;;;Biogas;Stock;SUP-Stock;23;inf;inf;inf;0
+2050_old;;;Biomass;Stock;SUP-Stock;23;inf;inf;inf;0
+2050_old;;;CO2;Env;ENV;12;inf;inf;inf;0
+2050_old;;;Coal;Stock;SUP-Stock;10,5365161;inf;inf;inf;0
+2050_old;;;Elec;Demand;DEM;;;;;0
+2050_old;;;Gas;Stock;SUP-Stock;24,80815129;inf;inf;inf;0
+2050_old;;;Geothermal;Stock;SUP-Stock;0;inf;inf;inf;0
+2050_old;;;Hydro_Large;SupIm;SUP-Intermittent;0;inf;inf;;0
+2050_old;;;Hydro_Small;SupIm;SUP-Intermittent;0;inf;inf;;0
+2050_old;;;Lignite;Stock;SUP-Stock;7;inf;inf;inf;0
+2050_old;;;Liquid biofuels;Stock;SUP-Stock;23;inf;inf;inf;0
+2050_old;;;Oil;Stock;SUP-Stock;40,25785851;inf;inf;inf;0
+2050_old;;;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
+2050_old;;;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2050_old;;;Tidal;Stock;SUP-Stock;0;inf;inf;inf;0
+2050_old;;;Uranium;Stock;SUP-Stock;2,33;inf;inf;inf;0
+2050_old;;;Waste;Stock;SUP-Stock;0;inf;inf;inf;0
+2050_old;;;WindOff;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2050_old;;;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2050_old;;;Bioenergy;Stock;SUP-Stock;23;inf;inf;inf;0
+2050_old;;;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
+2030_old;;;Biogas;Stock;SUP-Stock;23;inf;inf;inf;0
+2030_old;;;Biomass;Stock;SUP-Stock;23;inf;inf;inf;0
+2030_old;;;CO2;Env;ENV;12;inf;inf;inf;0
+2030_old;;;Coal;Stock;SUP-Stock;10,5365161;inf;inf;inf;0
+2030_old;;;Elec;Demand;DEM;;;;;0
+2030_old;;;Gas;Stock;SUP-Stock;24,80815129;inf;inf;inf;0
+2030_old;;;Geothermal;Stock;SUP-Stock;0;inf;inf;inf;0
+2030_old;;;Hydro_Large;SupIm;SUP-Intermittent;0;inf;inf;;0
+2030_old;;;Hydro_Small;SupIm;SUP-Intermittent;0;inf;inf;;0
+2030_old;;;Lignite;Stock;SUP-Stock;7;inf;inf;inf;0
+2030_old;;;Liquid biofuels;Stock;SUP-Stock;23;inf;inf;inf;0
+2030_old;;;Oil;Stock;SUP-Stock;40,25785851;inf;inf;inf;0
+2030_old;;;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
+2030_old;;;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2030_old;;;Tidal;Stock;SUP-Stock;0;inf;inf;inf;0
+2030_old;;;Uranium;Stock;SUP-Stock;2,33;inf;inf;inf;0
+2030_old;;;Waste;Stock;SUP-Stock;0;inf;inf;inf;0
+2030_old;;;WindOff;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2030_old;;;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2030_old;;;Bioenergy;Stock;SUP-Stock;23;inf;inf;inf;0
+2030_old;;;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0
+2040_old;;;Biogas;Stock;SUP-Stock;23;inf;inf;inf;0
+2040_old;;;Biomass;Stock;SUP-Stock;23;inf;inf;inf;0
+2040_old;;;CO2;Env;ENV;12;inf;inf;inf;0
+2040_old;;;Coal;Stock;SUP-Stock;10,5365161;inf;inf;inf;0
+2040_old;;;Elec;Demand;DEM;;;;;0
+2040_old;;;Gas;Stock;SUP-Stock;24,80815129;inf;inf;inf;0
+2040_old;;;Geothermal;Stock;SUP-Stock;0;inf;inf;inf;0
+2040_old;;;Hydro_Large;SupIm;SUP-Intermittent;0;inf;inf;;0
+2040_old;;;Hydro_Small;SupIm;SUP-Intermittent;0;inf;inf;;0
+2040_old;;;Lignite;Stock;SUP-Stock;7;inf;inf;inf;0
+2040_old;;;Liquid biofuels;Stock;SUP-Stock;23;inf;inf;inf;0
+2040_old;;;Oil;Stock;SUP-Stock;40,25785851;inf;inf;inf;0
+2040_old;;;Slack;Stock;SUP-Stock;999;inf;inf;inf;0
+2040_old;;;Solar;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2040_old;;;Tidal;Stock;SUP-Stock;0;inf;inf;inf;0
+2040_old;;;Uranium;Stock;SUP-Stock;2,33;inf;inf;inf;0
+2040_old;;;Waste;Stock;SUP-Stock;0;inf;inf;inf;0
+2040_old;;;WindOff;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2040_old;;;WindOn;SupIm;SUP-Intermittent;0;inf;inf;1;0
+2040_old;;;Bioenergy;Stock;SUP-Stock;23;inf;inf;inf;0
+2040_old;;;Hydro;SupIm;SUP-Intermittent;0;inf;inf;;0

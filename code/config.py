@@ -46,7 +46,7 @@ def general_settings():
 
     param = {}
     param["author"] = "Kais Siala"  # the name of the person running the script
-    param["comment"] = "Mekong"
+    param["comment"] = "Singapore"
 
     paths = {}
     fs = os.path.sep
@@ -93,16 +93,16 @@ def scope_paths_and_parameters(paths, param):
 
     # Paths to the shapefiles
     PathTemp = root + "02 Shapefiles for regions" + fs + "User-defined" + fs
-    paths["spatial_scope"] = PathTemp + "Mekong.shp"
-    paths["subregions"] = PathTemp + "Mekong.shp"
+    paths["spatial_scope"] = PathTemp + "gadm36_SGP_0.shp"
+    paths["subregions"] = PathTemp + "gadm36_SGP_0.shp"
 
     # Name tags for the scope and the subregions
-    param["region_name"] = "Mekong"  # Name tag of the spatial scope
-    param["subregions_name"] = "Mekong_provinces"  # Name tag of the subregions
+    param["region_name"] = "Singapore"  # Name tag of the spatial scope
+    param["subregions_name"] = "gadm36_SGP_0"  # Name tag of the subregions
 
     # Year
-    param["year"] = 2016  # Data
-    param["model_year"] = 2016  # Model
+    param["year"] = 2019  # Data
+    param["model_year"] = 2019  # Model
 
     # Technologies
     param["technology"] = {
@@ -463,6 +463,7 @@ def load_input_paths(paths, param):
     paths["load_ts_laos"] = PathTemp + "DataR_Laos" + fs + "data_laos_load_export_2016.csv"
     paths["load_ts_thailand"] = PathTemp + "DataR_Thailand" + fs + "data_thai_load_hourly_2016.csv"
     paths["load_ts_cambodia"] = PathTemp + "DataR_Cambodia" + fs + "data_camb_load_2016.csv"
+    paths["load_ts_singapore"] = root + "01 Raw inputs" + fs + "Load" + fs + "EMA Singapore"
     paths["substations_laos"] = PathTemp + "Powergrid_GIS_Data" + fs + "laos_grid" + fs + "LaoDemand.shp"
     paths["substations_thailand"] = PathTemp + "Powergrid_GIS_Data" + fs + "thai_grid" + fs + "ThaiSubstationsPrj.shp"
     paths["substations_cambodia"] = PathTemp + "Powergrid_GIS_Data" + fs + "cambodia_grid" + fs + "CambodiaSubstationsPrj.shp"

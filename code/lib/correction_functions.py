@@ -434,6 +434,49 @@ def clean_load_data_Mekong(paths, param):
     timecheck("End")
     
     
+def clean_load_data_Singapore(paths, param):
+    """
+    This function reads the raw load time series from EMA, combines the files and reshapes the matrix into one vector.
+    
+    :param paths: Dictionary containing the paths to the ENTSO-E input, to the dictionary of country names, and to the output.
+    :type paths: dict
+    :param param: Dictionary containing information about the year of the data.
+    :type param: dict
+    
+    :return: The result is saved directly in a CSV file in the desired path, along with its corresponding metadata.
+    :rtype: None
+    """
+    timecheck("Start")
+
+    df_combined = pd.DataFrame()
+    
+    # Read the half-hourly load timeseries for each week
+    for f in os.listdir(paths["load_ts_singapore"]):
+        df_raw = pd.read_excel(os.path.join(paths["load_ts_singapore"], f), header=[1,2,4], index_col=0, skipfooter=6)
+        df_raw.columns = df_raw.columns.droplevel(1)
+        df_system_dem = df_raw.reorder_levels([1,0],axis=1).stack()[" System Demand (Actual)"]
+        df_system_dem = df_system_dem.reorder_levels([1,0]).reset_index().rename(columns={"level_1": "Time", " System Demand (Actual)": "Load"})
+        # Change midnight (for sorting)
+        df_system_dem.loc[df_system_dem["Time"]=="00:00", "Time"] = "24:00"
+        # Filter year
+        df_system_dem = df_system_dem.loc[df_system_dem["Date"].astype("str")>=str(param["year"])]
+        df_system_dem = df_system_dem.loc[df_system_dem["Date"].astype("str")<str(param["year"]+1)]
+        # Sort
+        df_system_dem = df_system_dem.sort_values(["Date", "Time"], axis=0).reset_index(drop=True)
+        # Calculate hourly average
+        df_system_dem.loc[range(1,len(df_system_dem),2), "Load"] = (df_system_dem.loc[range(0,len(df_system_dem),2), "Load"].values + df_system_dem.loc[range(1,len(df_system_dem),2), "Load"].values)/2
+        df_system_dem = df_system_dem.loc[range(1,len(df_system_dem),2)]
+        # Combine weeks
+        df_combined = df_combined.append(df_system_dem, ignore_index=True)
+    df_combined.drop(["Time", "Date"], axis=1, inplace=True)
+    
+    df_combined.to_csv(paths["load_regions"], index=True, sep=";", decimal=",")
+    print("File saved: " + paths["load_regions"])
+    create_json(paths["load_regions"], param, ["region_name", "year"], paths, ["subregions", "load_ts_singapore"])
+
+    timecheck("End")
+    
+    
 def clean_hydro_data_Mekong(paths, param):
     """
     This function reads the raw hydro time series from the Mekong Database, renames the hydro power plants based on their locations, and
